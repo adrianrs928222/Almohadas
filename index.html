@@ -105,7 +105,8 @@
   <div class="container">
     <div class="hero">
       <h1>Almohada Ortopédica Cervical</h1>
-      <img src="https://via.placeholder.com/600x400" alt="Almohada ortopédica" />
+      <!-- Cambia "almohada.jpg" por el nombre de tu imagen local -->
+      <img src="almohada.jpg" alt="Almohada ortopédica" />
     </div>
 
     <p>¿Te despiertas con dolor de cuello? Esta almohada ergonómica se adapta perfectamente a tu postura para ayudarte a dormir mejor desde la primera noche.</p>
@@ -122,19 +123,52 @@
       Precio especial: <span style="color: #ef4444;">34,99 €</span>
     </div>
 
-    <form action="https://checkout.stripe.com/pay/YOUR_CHECKOUT_SESSION_ID" method="GET">
-      <button class="buy-button">Comprar ahora con tarjeta</button>
-    </form>
+    <button id="toggleCartBtn" class="buy-button"></button>
   </div>
 
   <div class="sticky-cart">
-    <span>🛒 1 producto en tu carrito</span>
-    <button onclick="window.location.href='https://checkout.stripe.com/pay/YOUR_CHECKOUT_SESSION_ID'">Finalizar compra</button>
+    <span id="cartStatus">🛒 0 productos en tu carrito</span>
+    <button onclick="checkout()">Finalizar compra</button>
   </div>
 
   <footer>
     &copy; 2025 AquisoloAlmohadas.net - Todos los derechos reservados.<br>
     Contacto: contacto@aquisoloalmohadas.net
   </footer>
+
+  <script>
+    // Simulamos un carrito con localStorage
+    const cartKey = "almohada-cart";
+    const cartStatus = document.getElementById("cartStatus");
+    const toggleCartBtn = document.getElementById("toggleCartBtn");
+
+    function updateCartUI() {
+      const inCart = localStorage.getItem(cartKey) === "true";
+      cartStatus.textContent = inCart ? "🛒 1 producto en tu carrito" : "🛒 0 productos en tu carrito";
+      toggleCartBtn.textContent = inCart ? "Eliminar del carrito" : "Añadir al carrito";
+    }
+
+    toggleCartBtn.addEventListener("click", () => {
+      const inCart = localStorage.getItem(cartKey) === "true";
+      if (inCart) {
+        localStorage.removeItem(cartKey);
+      } else {
+        localStorage.setItem(cartKey, "true");
+      }
+      updateCartUI();
+    });
+
+    function checkout() {
+      const inCart = localStorage.getItem(cartKey) === "true";
+      if (!inCart) {
+        alert("Primero debes añadir el producto al carrito.");
+        return;
+      }
+      window.location.href = "https://checkout.stripe.com/pay/YOUR_CHECKOUT_SESSION_ID";
+    }
+
+    // Inicializar al cargar
+    updateCartUI();
+  </script>
 </body>
 </html>
