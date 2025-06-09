@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Almohadas | AquisoloAlmohadas.net</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://js.stripe.com/v3/"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -98,14 +98,13 @@
 </head>
 <body>
   <header>
-    <h1>AquisoloAlmohadas.net</h1>
+    <h1>AquisoloAlmohadas</h1>
     <p>Tu descanso empieza aquí 💤</p>
   </header>
 
   <div class="container">
     <div class="hero">
       <h1>Almohada Ortopédica Cervical</h1>
-      <!-- Cambia "almohada.jpg" por el nombre de tu imagen local -->
       <img src="almohada.jpg" alt="Almohada ortopédica" />
     </div>
 
@@ -137,7 +136,6 @@
   </footer>
 
   <script>
-    // Simulamos un carrito con localStorage
     const cartKey = "almohada-cart";
     const cartStatus = document.getElementById("cartStatus");
     const toggleCartBtn = document.getElementById("toggleCartBtn");
@@ -158,16 +156,38 @@
       updateCartUI();
     });
 
-    function checkout() {
+    async function checkout() {
       const inCart = localStorage.getItem(cartKey) === "true";
       if (!inCart) {
         alert("Primero debes añadir el producto al carrito.");
         return;
       }
-      window.location.href = "https://checkout.stripe.com/pay/YOUR_CHECKOUT_SESSION_ID";
+
+      // Crea una instancia de Stripe con tu clave pública
+      const stripe = Stripe('pk_test_TU_CLAVE_PUBLICA'); // Reemplaza con tu clave real
+
+      try {
+        const response = await fetch('/crear-sesion-checkout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ producto: 'almohada-cervical' })
+        });
+
+        const session = await response.json();
+
+        if (session.id) {
+          await stripe.redirectToCheckout({ sessionId: session.id });
+        } else {
+          alert("No se pudo iniciar el proceso de pago.");
+        }
+      } catch (error) {
+        console.error('Error al iniciar Stripe Checkout:', error);
+        alert("Hubo un error al procesar el pago.");
+      }
     }
 
-    // Inicializar al cargar
     updateCartUI();
   </script>
 </body>
