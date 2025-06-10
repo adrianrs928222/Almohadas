@@ -1,11 +1,11 @@
 // server.js
 const express = require('express');
-const stripe = require('stripe')('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'); // <-- Sustituye esto
+const stripe = require('stripe')('TU_CLAVE_SECRETA'); // <-- Sustituye 'TU_CLAVE_SECRETA' por tu clave real de Stripe
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware para servir archivos estáticos (como index.html y almohada.jpg)
+// Middleware para servir archivos estáticos desde la carpeta "public"
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -38,7 +38,7 @@ app.post('/crear-sesion-checkout', async (req, res) => {
             currency: 'eur',
             product_data: {
               name: 'Almohada Ortopédica Cervical',
-              images: ['https://tusitio.com/almohada.jpg'], // o puedes dejarlo vacío
+              images: ['https://tusitio.com/almohada.jpg'], // Cambia esta URL si tienes otra imagen
             },
             unit_amount: 3499, // 34,99 € en céntimos
           },
