@@ -1,6 +1,6 @@
 // server.js
 const express = require('express');
-const stripe = require('stripe')('TU_CLAVE_SECRETA'); // <-- Sustituye 'TU_CLAVE_SECRETA' por tu clave real de Stripe
+const stripe = require('stripe')('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'); // <-- Sustituye 'TU_CLAVE_SECRETA' por tu clave real de Stripe
 
 const app = express();
 const PORT = process.env.PORT || 3000;
